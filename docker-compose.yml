@@ -1,11 +1,18 @@
 name: "blogify"
 services:
-  app:
+  users-http:
     build:
       context: docker/app
       dockerfile: Dockerfile
-    container_name: blogify
-    working_dir: /app
+    volumes:
+      - ./internal:/internal
+      - ./.go/pkg:/go/pkg
+      - ./.go-cache:/go-cache
+    working_dir: /internal/users
+    ports:
+      - "127.0.0.1:3002$PORT"
+    environment:
+      GOCACHE: /go-cache
     env_file:
       - .env
     depends_on:
