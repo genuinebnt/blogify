@@ -4,9 +4,10 @@ import (
 	"net/http"
 	"os"
 
+	"github.com/genuinebnt/blogify/internal/common/logs"
 	"github.com/go-chi/chi"
 	"github.com/go-chi/chi/v5/middleware"
-	"github.com/sirupsen/logrus"
+	"github.com/rs/zerolog"
 )
 
 func RunHTTPServer(createHandler func(router chi.Router) http.Handler) {
@@ -24,5 +25,5 @@ func RunHTTPServerOnAddr(addr string, createHandler func(router chi.Router) http
 func setMiddlewares(router *chi.Mux) {
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
-	router.Use(logs.NewStructuredLogger(logrus.StandardLogger()))
+	router.Use(logs.NewStructuredLogger(&zerolog.Logger{}))
 }
