@@ -3,3 +3,4 @@
 .vscode
 blogify.code-workspace
 .env*
+.go
