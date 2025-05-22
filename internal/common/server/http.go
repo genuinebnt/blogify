@@ -5,25 +5,32 @@ import (
 	"os"
 
 	"github.com/genuinebnt/blogify/internal/common/logs"
-	"github.com/go-chi/chi"
+	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog"
 )
 
-func RunHTTPServer(createHandler func(router chi.Router) http.Handler) {
-	RunHTTPServerOnAddr(":"+os.Getenv("PORT"), createHandler)
+func RunHTTPServer(router chi.Router) {
+	RunHTTPServerOnAddr(":"+os.Getenv("PORT"), router)
 }
 
-func RunHTTPServerOnAddr(addr string, createHandler func(router chi.Router) http.Handler) {
-	apiRouter := chi.NewRouter()
-	setMiddlewares(apiRouter)
-
+func RunHTTPServerOnAddr(addr string, router chi.Router) {
 	rootRouter := chi.NewRouter()
-	rootRouter.Mount("/api/v1", createHandler(apiRouter))
+	setMiddlewares(rootRouter)
+	rootRouter.Mount("/api/v1/", router)
+
+	err := http.ListenAndServe(addr, rootRouter)
+	if err != nil {
+		logs.GetLogger().Error().Err(err).Str("addr", addr).Msg("HTTP server failed to start")
+	}
+
+	logs.GetLogger().Info().Msg("Server started")
 }
 
 func setMiddlewares(router *chi.Mux) {
 	router.Use(middleware.RequestID)
 	router.Use(middleware.RealIP)
-	router.Use(logs.NewStructuredLogger(&zerolog.Logger{}))
+
+	logger := zerolog.New(os.Stdout).With().Timestamp().Logger()
+	router.Use(logs.NewStructuredLogger(&logs.ZeroLogLogger{Logger: logger}))
 }

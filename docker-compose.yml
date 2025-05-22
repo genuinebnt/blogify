@@ -10,7 +10,7 @@ services:
       - ./.go-cache:/go-cache
     working_dir: /internal/users
     ports:
-      - "127.0.0.1:3002$PORT"
+      - "127.0.0.1:3002:$PORT"
     environment:
       GOCACHE: /go-cache
     env_file:
