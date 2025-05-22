@@ -4,3 +4,4 @@
 blogify.code-workspace
 .env*
 .go
+.go-cache
