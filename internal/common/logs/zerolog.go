@@ -9,9 +9,8 @@ import (
 
 	"github.com/go-chi/chi/middleware"
 	"github.com/rs/zerolog"
+	"github.com/rs/zerolog/log"
 )
-
-var logger zerolog.Logger
 
 func Init() {
 	var writer io.Writer
@@ -26,7 +25,7 @@ func Init() {
 		writer = os.Stdout
 	}
 
-	logger = zerolog.New(writer).With().Timestamp().Logger()
+	log.Logger = zerolog.New(writer).With().Timestamp().Logger()
 }
 
 type ZeroLogLogger struct {
@@ -67,9 +66,4 @@ func (e *ZeroLogLoggerEntry) Panic(v interface{}, stack []byte) {
 		Interface("panic", v).
 		Bytes("stack", stack).
 		Msg("panic occurred")
-}
-
-// GetLogger returns the global logger instance
-func GetLogger() *zerolog.Logger {
-	return &logger
 }
