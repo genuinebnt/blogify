@@ -4,18 +4,18 @@ import (
 	"io"
 	"net/http"
 	"os"
-	"strconv"
 	"time"
 
+	"github.com/genuinebnt/blogify/internal/common/config"
 	"github.com/go-chi/chi/middleware"
 	"github.com/rs/zerolog"
 	"github.com/rs/zerolog/log"
 )
 
-func Init() {
+func Init(cfg *config.Config) {
 	var writer io.Writer
 
-	if isLocalEnv, _ := strconv.ParseBool(os.Getenv("LOCAL_ENV")); isLocalEnv {
+	if env := cfg.Env; env == "development" {
 		writer = zerolog.ConsoleWriter{
 			Out:        os.Stdout,
 			TimeFormat: time.RFC3339,

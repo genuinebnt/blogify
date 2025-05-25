@@ -1,26 +1,27 @@
 package server
 
 import (
+	"fmt"
 	"net/http"
-	"os"
 
+	"github.com/genuinebnt/blogify/internal/common/config"
 	"github.com/genuinebnt/blogify/internal/common/logs"
 	"github.com/go-chi/chi/v5"
 	"github.com/go-chi/chi/v5/middleware"
 	"github.com/rs/zerolog/log"
 )
 
-func RunHTTPServer(router chi.Router) {
-	RunHTTPServerOnAddr(os.Getenv("PORT"), router)
+func RunHTTPServer(router chi.Router, cfg *config.Config) {
+	RunHTTPServerOnAddr(cfg.Port, router)
 }
 
-func RunHTTPServerOnAddr(port string, router chi.Router) {
+func RunHTTPServerOnAddr(port int64, router chi.Router) {
 	rootRouter := chi.NewRouter()
 	setMiddlewares(rootRouter)
 	rootRouter.Mount("/api/v1/", router)
 
-	log.Info().Msgf("Starting server on port: %s", port)
-	err := http.ListenAndServe(":"+port, rootRouter)
+	log.Info().Msgf("Starting server on port: %d", port)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", port), rootRouter)
 
 	if err != nil {
 		log.Error().Msgf("Failed to start server with err: %s", err.Error())
