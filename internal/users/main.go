@@ -9,7 +9,6 @@ import (
 )
 
 func main() {
-	// Initialize the global logger
 	cfg, err := config.LoadConfig()
 	if err != nil {
 		log.Error().Msgf("Failed to load config %s", err.Error())
@@ -23,6 +22,7 @@ func main() {
 		return
 	}
 
-	r := Router()
-	server.RunHTTPServer(r, cfg)
+	r := GlobalRouter(db)
+	s := server.NewServer(r, cfg)
+	s.RunHTTPServer()
 }

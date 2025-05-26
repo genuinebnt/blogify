@@ -39,10 +39,6 @@ func LoadConfig() (*Config, error) {
 		return nil, errors.New("ENVIRONMENT must be 'development' or 'production'")
 	}
 
-	if err != nil {
-		return nil, err
-	}
-
 	host := parseEnvString("POSTGRES_HOST", "localhost")
 	user := parseEnvString("POSTGRES_USER", "postgres")
 	password := parseEnvString("POSTGRES_PASSWORD", "password")
