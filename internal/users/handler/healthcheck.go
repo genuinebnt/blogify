@@ -5,6 +5,7 @@ import (
 
 	helpers "github.com/genuinebnt/blogify/internal/common"
 	"github.com/genuinebnt/blogify/internal/common/config"
+	"github.com/genuinebnt/blogify/internal/common/errors"
 )
 
 const version = "0.1.0"
@@ -20,16 +21,16 @@ func NewHealthCheckHandler(cfg *config.Config) *HealthCheckHandler {
 }
 
 func (h *HealthCheckHandler) CheckHealth() http.HandlerFunc {
-	data := map[string]string{
-		"status":      "available",
-		"environment": h.cfg.Env,
-		"version":     version,
+	env := helpers.Envelope{
+		"status": "available",
+		"system_info": map[string]string{
+			"environmen": h.cfg.Env,
+			"version":    version,
+		},
 	}
 
 	return func(w http.ResponseWriter, r *http.Request) {
-		err := helpers.WriteJSON(w, http.StatusOK, data, nil)
-		if err != nil {
-			http.Error(w, "The server encountered a problem and could not process your request", http.StatusInternalServerError)
-		}
+		err := helpers.WriteJSON(w, http.StatusOK, env, nil)
+		errors.ServerErrorResponse(w, r, err)
 	}
 }

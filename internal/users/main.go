@@ -22,7 +22,7 @@ func main() {
 		return
 	}
 
-	r := GlobalRouter(db)
+	r := GlobalRouter(db, cfg)
 	s := server.NewServer(r, cfg)
 	s.RunHTTPServer()
 }
