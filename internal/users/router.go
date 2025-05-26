@@ -9,7 +9,9 @@ import (
 
 func GlobalRouter(db *pgxpool.Pool, cfg *config.Config) chi.Router {
 	r := chi.NewRouter()
+
 	r.Mount("/", routes.HealthCheckRouter(cfg))
 	r.Mount("/users", routes.UserRouter(db))
+
 	return r
 }
