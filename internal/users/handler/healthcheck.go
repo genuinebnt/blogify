@@ -3,9 +3,9 @@ package handler
 import (
 	"net/http"
 
-	helpers "github.com/genuinebnt/blogify/internal/common"
 	"github.com/genuinebnt/blogify/internal/common/config"
 	"github.com/genuinebnt/blogify/internal/common/errors"
+	"github.com/genuinebnt/blogify/internal/common/helpers"
 )
 
 const version = "0.1.0"

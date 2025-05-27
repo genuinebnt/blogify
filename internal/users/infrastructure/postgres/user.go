@@ -18,7 +18,7 @@ func NewPostgresUserRepository(db *pgxpool.Pool) PostgresUserRepository {
 	}
 }
 
-func (u PostgresUserRepository) Insert(user *entity.User) error {
+func (u PostgresUserRepository) Create(user *entity.User) error {
 	query := `
 		INSERT INTO users (id, username, email, password)
 		VALUES ($1, $2, $3, $4)
@@ -36,14 +36,16 @@ func (u PostgresUserRepository) Delete(id int64) error {
 	return nil
 }
 
-func (u PostgresUserRepository) FindAll() error {
-	return nil
+func (u PostgresUserRepository) FindAll() ([]entity.User, error) {
+	return nil, nil
 }
 
-func (u PostgresUserRepository) FindByID(id uuid.UUID) error {
-	return nil
+func (u PostgresUserRepository) FindByID(id uuid.UUID) (*entity.User, error) {
+	return nil, nil
 }
 
-func (u PostgresUserRepository) FindByEmail(email string) error {
-	return nil
+func (u PostgresUserRepository) FindByEmail(email string) (*entity.User, error) {
+	return nil, nil
 }
+
+

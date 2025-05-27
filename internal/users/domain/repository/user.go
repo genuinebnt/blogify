@@ -6,10 +6,10 @@ import (
 )
 
 type UserRepository interface {
-	Insert(*entity.User) error
+	Create(*entity.User) error
 	Update(*entity.User) error
 	Delete(id int64) error
-	FindAll() error
-	FindByID(id uuid.UUID) error
-	FindByEmail(email string) error
+	FindAll() ([]entity.User, error)
+	FindByID(id uuid.UUID) (*entity.User, error)
+	FindByEmail(email string) (*entity.User, error)
 }

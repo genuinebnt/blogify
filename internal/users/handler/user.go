@@ -3,8 +3,11 @@ package handler
 import (
 	"net/http"
 
+	"github.com/genuinebnt/blogify/internal/common/errors"
+	"github.com/genuinebnt/blogify/internal/common/helpers"
+	"github.com/genuinebnt/blogify/internal/common/validator"
+	"github.com/genuinebnt/blogify/internal/users/domain/entity"
 	"github.com/genuinebnt/blogify/internal/users/domain/service"
-	"github.com/rs/zerolog/log"
 )
 
 type UserHandler struct {
@@ -17,13 +20,21 @@ func NewUserHandler(userService service.UserService) UserHandler {
 	}
 }
 
-func (u *UserHandler) ListUsers() http.HandlerFunc {
-	err := u.userService.UserRepo.FindAll()
-	if err != nil {
-		log.Error().Msg(err.Error())
-	}
-
+func (u *UserHandler) Register() http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
-		w.WriteHeader(http.StatusOK)
+		user := entity.User{}
+		err := helpers.ReadJSON(w, r, &user)
+		if err != nil {
+			errors.BadRequestResponse(w, r, err)
+			return
+		}
+
+		v := validator.New()
+		if user.Validate(v); !v.Valid() {
+			errors.FailedValidationResponse(w, r, v.Errors)
+			return
+		}
+
+		u.userService.CreateUser(&user)
 	}
 }
