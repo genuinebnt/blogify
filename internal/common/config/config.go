@@ -43,7 +43,7 @@ func LoadConfig() (*Config, error) {
 	user := parseEnvString("POSTGRES_USER", "postgres")
 	password := parseEnvString("POSTGRES_PASSWORD", "password")
 	dbport := parseEnvInt("POSTGRES_PORT", 5432)
-	database := parseEnvString("POSTGRES_DATABASE", "blogify")
+	database := parseEnvString("POSTGRES_DB", "blogify")
 	maxOpenConn := parseEnvInt("DATABASE_MAX_OPEN_CONN", 25)
 	maxIdleConn := parseEnvInt("DATABASE_MAX_IDLE_CONN", 25)
 	maxIdleTime := parseEnvDuration("DATABASE_MAX_IDLE_TIME", 15*time.Minute)
@@ -65,7 +65,7 @@ func LoadConfig() (*Config, error) {
 }
 
 func (cfg *Config) ConnectionStringFromEnv() string {
-	return fmt.Sprintf("postgres//%s:%s@%s:%d/%s", cfg.DB.User, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.Database)
+	return fmt.Sprintf("user=%s password=%s host=%s port=%d dbname=%s", cfg.DB.User, cfg.DB.Password, cfg.DB.Host, cfg.DB.Port, cfg.DB.Database)
 }
 
 func parseEnvInt(key string, defaultVal int64) int64 {

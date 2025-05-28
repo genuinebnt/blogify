@@ -18,7 +18,7 @@ func main() {
 	logs.Init(cfg)
 	db, err := postgres.NewPostgresDB(cfg.ConnectionStringFromEnv())
 	if err != nil {
-		log.Error().Msg("Failed to connect to postgres")
+		log.Error().Msgf("Failed to connect to postgres with error: %s", err)
 		return
 	}
 
