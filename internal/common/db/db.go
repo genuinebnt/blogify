@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 func NewPostgresDB(connection string) (*pgxpool.Pool, error) {
@@ -15,6 +16,8 @@ func NewPostgresDB(connection string) (*pgxpool.Pool, error) {
 	if err != nil {
 		return nil, err
 	}
+
+	log.Info().Msg("Database connection pool established")
 
 	defer dbPool.Close()
 	return dbPool, nil
