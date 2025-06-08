@@ -19,6 +19,5 @@ func NewPostgresDB(connection string) (*pgxpool.Pool, error) {
 
 	log.Info().Msg("Database connection pool established")
 
-	defer dbPool.Close()
 	return dbPool, nil
 }

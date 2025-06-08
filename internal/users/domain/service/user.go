@@ -18,9 +18,13 @@ func NewUserService(userRepo repository.UserRepository) UserService {
 	}
 }
 
-func (u UserService) CreateUser(user *entity.User) {
+func (u UserService) CreateUser(user *entity.User) error {
 	user.Id = uuid.New()
 	user.CreatedAt = time.Now()
 
-	u.UserRepo.Create(user)
+	err := u.UserRepo.Create(user)
+	if err != nil {
+		return err
+	}
+	return nil
 }

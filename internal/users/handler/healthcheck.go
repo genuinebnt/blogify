@@ -31,6 +31,8 @@ func (h *HealthCheckHandler) CheckHealth() http.HandlerFunc {
 
 	return func(w http.ResponseWriter, r *http.Request) {
 		err := helpers.WriteJSON(w, http.StatusOK, env, nil)
-		errors.ServerErrorResponse(w, r, err)
+		if err != nil {
+			errors.ServerErrorResponse(w, r, err)
+		}
 	}
 }

@@ -6,6 +6,7 @@ import (
 	"github.com/genuinebnt/blogify/internal/users/domain/entity"
 	"github.com/google/uuid"
 	"github.com/jackc/pgx/v5/pgxpool"
+	"github.com/rs/zerolog/log"
 )
 
 type PostgresUserRepository struct {
@@ -24,6 +25,7 @@ func (u PostgresUserRepository) Create(user *entity.User) error {
 		VALUES ($1, $2, $3, $4)
 		RETURNING id, created_at`
 
+	log.Info().Msgf("Creating user with ID: %s, username: %s, email: %s", user.Id, user.Username, user.Email)
 	args := []any{user.Id, user.Username, user.Email, user.Password}
 	return u.db.QueryRow(context.Background(), query, args...).Scan(&user.Id, &user.CreatedAt)
 }
@@ -47,5 +49,3 @@ func (u PostgresUserRepository) FindByID(id uuid.UUID) (*entity.User, error) {
 func (u PostgresUserRepository) FindByEmail(email string) (*entity.User, error) {
 	return nil, nil
 }
-
-

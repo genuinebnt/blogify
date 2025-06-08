@@ -10,6 +10,7 @@ import (
 
 func main() {
 	cfg, err := config.LoadConfig()
+	log.Info().Msgf("Loaded config: %+v", cfg)
 	if err != nil {
 		log.Error().Msgf("Failed to load config %s", err.Error())
 		return

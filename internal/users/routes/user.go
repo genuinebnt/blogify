@@ -15,7 +15,7 @@ func UserRouter(db *pgxpool.Pool) chi.Router {
 	userService := service.NewUserService(userRepo)
 	userHandler := handler.NewUserHandler(userService)
 
-	r.Get("/auth/register", userHandler.Register())
+	r.Post("/auth/register", userHandler.Register())
 
 	return r
 }

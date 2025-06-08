@@ -16,7 +16,6 @@ import (
 
 type Server struct {
 	httpServer *http.Server
-	router     *chi.Router
 	cfg        *config.Config
 }
 
@@ -36,13 +35,13 @@ func NewServer(router chi.Router, cfg *config.Config) *Server {
 			IdleTimeout:  time.Minute,
 			ReadTimeout:  5 * time.Second,
 			WriteTimeout: 10 * time.Second,
-		}, router: &router,
+		}, cfg: cfg,
 	}
 }
 
 func (s *Server) RunHTTPServer() {
 	log.Info().Msgf("Starting server on port: %d", s.cfg.Port)
-	err := http.ListenAndServe(fmt.Sprintf(":%d", s.cfg.Port), *s.router)
+	err := http.ListenAndServe(fmt.Sprintf(":%d", s.cfg.Port), s.httpServer.Handler)
 
 	if err != nil {
 		log.Error().Msgf("Failed to start server with err: %s", err.Error())

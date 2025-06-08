@@ -8,6 +8,7 @@ import (
 	"github.com/genuinebnt/blogify/internal/common/validator"
 	"github.com/genuinebnt/blogify/internal/users/domain/entity"
 	"github.com/genuinebnt/blogify/internal/users/domain/service"
+	"github.com/rs/zerolog/log"
 )
 
 type UserHandler struct {
@@ -35,6 +36,11 @@ func (u *UserHandler) Register() http.HandlerFunc {
 			return
 		}
 
-		u.userService.CreateUser(&user)
+		err = u.userService.CreateUser(&user)
+		if err != nil {
+			log.Err(err).Msg("Failed to create user")
+			errors.ServerErrorResponse(w, r, err)
+			return
+		}
 	}
 }

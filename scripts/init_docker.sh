@@ -11,12 +11,9 @@ export DB_HOST=${POSTGRES_HOST:=localhost}
 export PORT=3000
 export ENVIRONMENT=development
 
-export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}
+export DATABASE_URL=postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}:${DB_PORT}/${DB_NAME}?sslmode=disable
 
-cwd=$(pwd)
-cd scripts/
-
-docker compose up &
+docker compose up -d
 
 export PGPASSWORD=${DB_PASSWORD}
 until psql -h ${DB_HOST} -U ${DB_USER} -p ${DB_PORT} -d 'postgres' -c '\q'; do
@@ -24,6 +21,4 @@ until psql -h ${DB_HOST} -U ${DB_USER} -p ${DB_PORT} -d 'postgres' -c '\q'; do
     sleep 1
 done
 
-migrate -path ../migrations -database ${DATABASE_URL}
-
-cd ${cwd}
+migrate -path=./migrations -database ${DATABASE_URL} up
